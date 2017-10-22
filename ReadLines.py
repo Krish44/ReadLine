@@ -36,31 +36,41 @@ def center(toplevel):
 
 
 def read_data():
+    # Read source directory detail
     get_dir = loc_entry.get('1.0', 'end-1c')
-    # out_file = "LOC_File.txt"
+    # Receive o/p file name entered by user
     out_file_temp = op_fil_entry.get('1.0', 'end-1c')
+    # Prepare format for txt file 
     out_file = out_file_temp+".txt"
+    # Open file for editing
     fo = open(out_file, "a")
+    # File will be detailed with below sections
     fo.write("Sl.No,File Name,LOC,Path\n")
     i = 1
     for dirpath, dirnames, filenames in os.walk(get_dir):
         for filename in filenames:
             FullFile = os.path.join(dirpath, filename)  # Got file here
+            # Get the present directory detail
             DirPath = os.path.join(dirpath)
+            # Get the file name
             FileName = os.path.join(filename)
             with open(FullFile) as fil:
+                # Since opened fie using - with,Present file closes at the end of the loop
                 count_lines = len(fil.readlines())
                 fo.write("%s,%s,%s,%s\n" % (i, FileName, count_lines, DirPath))
                 i=i+1
     fo.close()
+    # Convert the present text fiile to CSV format
     csv_file = out_file_temp+".csv"
     copyfile(out_file, csv_file)
+    # Present the final details on text box
     op_text.insert(END, ("\n Number of Files Checked: %s" % (i-1)))
     op_text.insert(END, ("\n Output files available at: %s" % os.getcwd()))
     op_text.insert(END, ("\n Data Files: \n  %s\n  %s\n" % (out_file, csv_file)))
 
 
 def clear_field():
+    # Clears the entries on the text boxes
     loc_entry.delete('1.0', END)
     op_fil_entry.delete('1.0', END)
     op_text.delete('1.0', END)
@@ -68,12 +78,15 @@ def clear_field():
 
 if __name__ == '__main__':
     win = Tk()
+    # Add bg image for better representation
     background_image = PhotoImage(file=r"C:\Drives_kp\Learning\PyCodes\LOC\FileExpo.png")
+    #  Format the window dimension
     window_set()
     text_font, text_size, bg_color = "Calibri", 12, '#1E3C5C'
     # Labels and Fields
     loc = Label(win, text="Location")   # label.config(font=("Courier", 44))
     loc.config(font=(text_font, text_size), bg=bg_color, fg='white')
+    # Below field contains the source directory details
     loc_entry = Text(win, bd=4, height=1.2, width=43, font=(text_font, text_size), state=NORMAL)
     op = Label(win, text="Output", font=(text_font, text_size), bg=bg_color, fg='white')
     op_text = Text(win, bd=4, height=7, width=43, font=(text_font, text_size), state=NORMAL)
